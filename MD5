@@ -1,0 +1,9 @@
+7f64efac5d1c8110823ffa994cc7e613 *DESCRIPTION
+dcb5335278aa87655f3af54273441759 *NAMESPACE
+c8d9c185d4f6c16ff997835f197a1d8b *NEWS
+ddde9d5bce49de3ef2c3505973025cc8 *R/ES.chisq.R
+582123a88c6cecf7066e79c0d4fd3d09 *R/power.chisq.R
+2c9cf8c6abeffc60d1240b20c28e543c *R/power.plot.chisq.R
+a4366d414e7b8d3efe0cc64c64d0de55 *man/ES.chisq.Rd
+147f05c6f1343a47de8cbbc9fc6eecce *man/power.chisq.Rd
+d9fd86c9ddaafefe3005b3146c37d86c *man/power.plot.chisq.Rd

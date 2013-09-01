@@ -1,0 +1,3 @@
+export(ES.chisq)
+export(power.chisq)
+export(power.plot.chisq)
