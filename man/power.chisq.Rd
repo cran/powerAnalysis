@@ -1,42 +1,43 @@
 \name{power.chisq}
 \alias{power.chisq}
-\title{Compute study power of chi-squared test}
+\title{Power calculations for chi-squared test}
 \usage{
   power.chisq(es = NULL, df = NULL, n = NULL, power = NULL,
     sig.level = NULL)
 }
 \arguments{
   \item{es}{effect size. A numeric value or output of
-  ES.chisq}
+  ES.chisq.gof, ES.chisq.assoc}
 
   \item{df}{degree of freedom}
 
-  \item{n}{total number of observations (sample size)}
+  \item{n}{total number of observations}
 
   \item{power}{power of study}
 
   \item{sig.level}{significance level}
 }
-\value{
-  power, es, df, n, sig.level
-}
 \description{
-  Compute study power of chi-squared test
+  Power calculations for chi-squared test
 }
 \examples{
-counts <- matrix(c(225,125,85,95),nrow=2,byrow=TRUE);
-power.chisq(es=ES.chisq(ct=counts),sig.level=0.05)
+## calculate power
+power.chisq(es=0.16,df=1,n=530,sig.level=0.05)
+
+## calculate sig.level
+power.chisq(es=0.16,df=1,n=530,power=0.9576)
+
+## calculate sample size
+power.chisq(es=0.16,df=1,power=0.9576,sig.level=0.05)
+
+## calculate effect size
+power.chisq(df=1,n=530,power=0.9576,sig.level=0.05)
 }
 \seealso{
-  \code{\link{ES.chisq}}
+  \code{\link{ES.chisq.gof}}
+
+  \code{\link{ES.chisq.assoc}}
+
+  \code{\link{power.plot.chisq}}
 }
-\keyword{chi-squared}
-\keyword{effect}
-\keyword{level}
-\keyword{power,}
-\keyword{sample}
-\keyword{significant}
-\keyword{size,}
-\keyword{study}
-\keyword{test,}
 

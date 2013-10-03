@@ -1,24 +1,25 @@
-#' Compute study power of chi-squared test
+#' Power calculations for chi-squared test
 #'
-#' @param es              effect size. A numeric value or output of ES.chisq
+#' @param es              effect size. A numeric value or output of ES.chisq.gof, ES.chisq.assoc
 #' @param df              degree of freedom
-#' @param n               total number of observations (sample size)
+#' @param n               total number of observations
 #' @param power           power of study
 #' @param sig.level       significance level
-#' @seealso               \code{\link{ES.chisq}}
-#' @return                power, es, df, n, sig.level
-#' @keywords              study power, effect size, chi-squared test, sample size, significant level
+#' @seealso               \code{\link{ES.chisq.gof}}
+#' @seealso               \code{\link{ES.chisq.assoc}}
+#' @seealso               \code{\link{power.plot.chisq}}
 #' @export
 #' @examples
-#' counts <- matrix(c(225,125,85,95),nrow=2,byrow=TRUE);
-#' power.chisq(es=ES.chisq(ct=counts),sig.level=0.05)
-#' @examples
+#' ## calculate power
 #' power.chisq(es=0.16,df=1,n=530,sig.level=0.05)
-#' @examples
+#' 
+#' ## calculate sig.level
 #' power.chisq(es=0.16,df=1,n=530,power=0.9576)
-#' @examples
+#'
+#' ## calculate sample size
 #' power.chisq(es=0.16,df=1,power=0.9576,sig.level=0.05)
-#' @examples
+#' 
+#' ## calculate effect size
 #' power.chisq(df=1,n=530,power=0.9576,sig.level=0.05)
 power.chisq <- function(es=NULL,df=NULL,n=NULL,power=NULL,sig.level=NULL){
   pwr=NULL
@@ -26,22 +27,17 @@ power.chisq <- function(es=NULL,df=NULL,n=NULL,power=NULL,sig.level=NULL){
     myes=es$es
     df=es$df
     n=es$n
-    pwr$es=es$es
-    pwr$df=es$df
-    pwr$n=es$n
     if (sum(sapply(list(power, sig.level), is.null)) != 1){
       stop("exactly one of power and sig.level must be NULL\n")
     }else if(is.null(power)){
       temp <- qchisq(sig.level, df = df, lower.tail = FALSE)
-      pwr$power=pchisq(temp, df = df, ncp = n * myes^2, lower.tail = FALSE)
-      pwr$sig.level=sig.level
+      power=pchisq(temp, df = df, ncp = n * myes^2, lower.tail = FALSE)
     }else{
-      pwr$power=power
       func1 <- function(sig.level){
         temp <- qchisq(sig.level, df = df, lower.tail = FALSE)
         pchisq(temp, df = df, ncp = n * myes^2, lower.tail = FALSE) - power
       }
-      pwr$sig.level=uniroot(func1,lower=1e-15,upper=1-1e-15)$root
+      sig.level=uniroot(func1,lower=1e-15,upper=1-1e-15)$root
     }
   }else{
     if(!is.numeric(df) || df<1){
@@ -64,43 +60,30 @@ power.chisq <- function(es=NULL,df=NULL,n=NULL,power=NULL,sig.level=NULL){
     }
     
     if(is.null(power)){
-      pwr$es=es
-      pwr$df=df
-      pwr$n=n
       temp <- qchisq(sig.level, df = df, lower.tail = FALSE)
-      pwr$power=pchisq(temp, df = df, ncp = n * es^2, lower.tail = FALSE)
-      pwr$sig.level=sig.level
+      power=pchisq(temp, df = df, ncp = n * es^2, lower.tail = FALSE)
     }else if(is.null(n)){
-      pwr$es=es
-      pwr$df=df
       func2 <- function(n){
         temp <- qchisq(sig.level, df = df, lower.tail = FALSE)
         pchisq(temp, df = df, ncp = n * es^2, lower.tail = FALSE) - power
       }
-      pwr$n=uniroot(func2,lower=1+1e-15,upper=1e+15)$root
-      pwr$power=power
-      pwr$sig.level=sig.level
+      n=uniroot(func2,lower=1+1e-15,upper=1e+15)$root
     }else if(is.null(es)){
       func3 <- function(es){
         temp <- qchisq(sig.level, df = df, lower.tail = FALSE)
         pchisq(temp, df = df, ncp = n * es^2, lower.tail = FALSE) - power
       }
-      pwr$es=uniroot(func3,lower=1e-15,upper=1-1e-15)$root
-      pwr$df=df
-      pwr$n=n
-      pwr$power=power
-      pwr$sig.level=sig.level
+      es=uniroot(func3,lower=1e-15,upper=1-1e-15)$root
     }else if(is.null(sig.level)){
-      pwr$es=es
-      pwr$df=df
-      pwr$n=n
-      pwr$power=power
       func4 <- function(sig.level){
         temp <- qchisq(sig.level, df = df, lower.tail = FALSE)
         pchisq(temp, df = df, ncp = n * es^2, lower.tail = FALSE) - power
       }
-      pwr$sig.level=uniroot(func4,lower=1e-15,upper=1-1e-15)$root
+      sig.level=uniroot(func4,lower=1e-15,upper=1-1e-15)$root
     }
   }
-return(pwr)
+  n=ceiling(n)
+METHOD <- "Chi squared power calculation"
+NOTE <- "'n' is the number of observations"
+structure(list(Power = power, Effect_Size=es, df=df, n=n,sig.level=sig.level, note=NOTE,method = METHOD), class = "power.htest")
 }
